@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+    php:
+        build: .
+        ports:
+            - "8080:80" # Mappa la porta 80 del container alla porta 8080 sull'host
+        volumes:
+            - ./src:/var/www/html # Monta la directory locale src in /var/www/html nel container
+        networks:
+            - app-network # Collega il servizio php alla rete app-network
+    
+    mysql:
+        image: mysql:8.0 # Usa l'immagine MySQL 8.0
+        environment:
+            MYSQL_ROOT_PASSWORD: root # Imposta la password di root di MySQL
+            MYSQL_DATABASE: my_db # Crea un database chiamato my_db
+            MYSQL_USER: my_user # Crea un utente chiamato my_user
+            MYSQL_PASSWORD: my_password # Imposta la password per my_user
+        ports:
+            - "3306:3306" # Mappa la porta 3306 del container alla porta 3306 sull'host
+        volumes:
+            - mysql-data:/var/lib/mysql # Usa il volume mysql-data per persistere i dati
+        networks:
+            - app-network # Collega il servizio mysql alla rete app-network
+        
+volumes:
+    mysql-data: # Definisce il volume mysql-data
+
+networks:
+    app-network: # Definisce la rete app-network
